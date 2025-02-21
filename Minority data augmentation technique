@@ -1,0 +1,46 @@
+
+# Select majority and minority classes
+X_majority = X_train[y_train == 0]
+X_minority = X_train[y_train == 1]
+X_minority_augmented = np.zeros((2*X_minority.shape[0], 2304))
+print(X_minority_augmented.shape)
+j=0
+i=0
+#print(int(X_minority.shape[0]/2))
+for i in range(int(X_minority.shape[0]/2)):
+    i = i*2
+    #print(i)
+    x1=X_minority[i,:]
+    x2=X_minority[i+1,:]
+    x_combined = np.concatenate((X_minority[i,:], X_minority[i+1,:]))
+    #print(x_combined.shape)
+    x3 = x_combined[768:3072]
+    x4 = x_combined[1792:4096]
+    #print(x3.shape)
+    #print(x2.shape)
+        
+    X_minority_augmented[j] = x1  #np.roll(x1, 2000)
+    j=j+1    
+    X_minority_augmented[j] = x2  #np.roll(x1, 2000)
+    j=j+1
+    X_minority_augmented[j] = x3  #np.roll(x1, 2000)
+    j=j+1
+    #x1=X_minority[i,:]
+    X_minority_augmented[j] = x4 #np.roll(x1, 2000)x1
+    j=j+1
+    #i=i+1
+    #print(i)
+#print(i)
+print(X_minority_augmented.shape)
+X_train_augmented = np.vstack((X_majority, X_minority_augmented))
+y_train_augmented = np.hstack((np.zeros(X_majority.shape[0]), np.ones(X_minority_augmented.shape[0])))
+# shuffle the data
+
+idx = np.random.permutation(X_train_augmented.shape[0])
+#print(idx)
+X_train_augmented = X_train_augmented[idx]
+y_train_augmented = pd.DataFrame(y_train_augmented[idx])
+print(X_train_augmented.shape)
+#print(y_train_augmented[0])
+X_train=X_train_augmented
+y_train=y_train_augmented
