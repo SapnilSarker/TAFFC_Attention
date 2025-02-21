@@ -1,0 +1,65 @@
+from tensorflow.keras.layers import Input, Conv1D, MaxPooling1D, LSTM, Bidirectional, Dense, Dropout, BatchNormalization, GlobalMaxPooling1D, Attention, Concatenate
+from tensorflow.keras.models import Model
+from tensorflow.keras.regularizers import l2
+
+input_layer = Input(shape=(2475, 1))
+
+# Shared CNN layers
+def shared_cnn(input_layer, filters1, kernel_size1, filters2, kernel_size2, filters3, kernel_size3):
+    conv1 = Conv1D(filters=filters1, kernel_size=kernel_size1, activation='relu')(input_layer)
+    maxpool1 = MaxPooling1D(pool_size=2)(conv1)
+    batch_norm1 = BatchNormalization()(maxpool1)
+
+    conv2 = Conv1D(filters=filters2, kernel_size=kernel_size2, activation='relu')(batch_norm1)
+    maxpool2 = MaxPooling1D(pool_size=2)(conv2)
+    batch_norm2 = BatchNormalization()(maxpool2)
+
+    conv3 = Conv1D(filters=filters3, kernel_size=kernel_size3, activation='relu')(batch_norm2)
+    maxpool3 = MaxPooling1D(pool_size=2)(conv3)
+    batch_norm3 = BatchNormalization()(maxpool3)
+
+    return batch_norm3
+
+# Shared BiLSTM layer with attention
+def shared_bilstm_with_attention(shared_cnn_output, units, return_sequences, num_heads):
+    bilstm_output = Bidirectional(LSTM(units=units, return_sequences=return_sequences))(shared_cnn_output)
+    attention_heads = []
+    for _ in range(num_heads):
+        attention_head = Attention()([bilstm_output, bilstm_output])
+        attention_heads.append(attention_head)
+
+    # Concatenate the outputs of attention heads
+    multi_attention = Concatenate(axis=-1)(attention_heads)
+    global_pool = GlobalMaxPooling1D()(bilstm_output)
+    return global_pool
+
+# Apply shared CNN and BiLSTM with attention to each input path with different parameters
+shared_cnn_output1 = shared_cnn(input_layer, filters1=64, kernel_size1=10, filters2=128, kernel_size2=5, filters3=256, kernel_size3=3)
+shared_bilstm_output1 = shared_bilstm_with_attention(shared_cnn_output1, units=64, return_sequences=True, num_heads=4)
+
+shared_cnn_output2 = shared_cnn(input_layer, filters1=32, kernel_size1=14, filters2=64, kernel_size2=8, filters3=128, kernel_size3=5)
+shared_bilstm_output2 = shared_bilstm_with_attention(shared_cnn_output2, units=32, return_sequences=True, num_heads=2)
+
+# Concatenate the outputs of both paths
+concatenated_output = Concatenate(axis=-1)([shared_bilstm_output1, shared_bilstm_output2])
+#with kernel size 14, cnn, bilstm
+# Dense layers
+global_pool2 = GlobalMaxPooling1D()(shared_cnn_output2)
+global_pool1 = GlobalMaxPooling1D()(shared_cnn_output1)
+concatenated_output2 = Concatenate(axis=-1)([global_pool1, global_pool2])
+
+dense1 = Dense(units=256, activation='relu', kernel_regularizer=l2(0.01))(shared_bilstm_output2)
+batch_norm4 = BatchNormalization()(dense1)
+drop1 = Dropout(0.4)(batch_norm4)
+
+dense2 = Dense(units=128, activation='relu', kernel_regularizer=l2(0.01))(drop1)
+batch_norm5 = BatchNormalization()(dense2)
+drop2 = Dropout(0.4)(batch_norm5)
+
+# Output layer
+output = Dense(units=1, activation='sigmoid')(drop2)
+
+# Model
+model = Model(inputs=input_layer, outputs=output)
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.summary()
