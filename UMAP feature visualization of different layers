@@ -1,0 +1,310 @@
+pip install umap-learn
+from tensorflow.keras.models import load_model
+import numpy as np
+import umap
+import matplotlib.pyplot as plt
+import umap.umap_ as umap
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+
+# Assuming 'model' is your Keras model
+for layer in model.layers:
+    print(layer.name)
+
+
+# Specify the layer name
+layer_name = 'input_layer'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Rep. of Test Data')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_maps1.png')  # You can change the filename and format as needed
+plt.show()
+
+
+
+
+# Specify the layer name
+layer_name = 'batch_normalization_2'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+
+
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Features Rep. of CNN Layers')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_cnn1.png')  # You can change the filename and format as needed
+plt.show()
+
+
+# Specify the layer name
+layer_name = 'batch_normalization_5'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+
+
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Features Rep. of CNN Layers')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_cnn2.png')  # You can change the filename and format as needed
+plt.show()
+
+
+
+# Specify the layer name
+layer_name = 'bidirectional'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+
+
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Features Rep. of BiLSTM Layer')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_bilstm1.png')  # You can change the filename and format as needed
+plt.show()
+
+
+
+# Specify the layer name
+layer_name = 'bidirectional_1'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+
+
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Features Rep. of BiLSTM Layer')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_bilstm2.png')  # You can change the filename and format as needed
+plt.show()
+
+
+
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Model
+import matplotlib.pyplot as plt
+import umap
+
+# Specify the layer name
+layer_name = 'concatenate'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+
+
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Features Rep. of MHA Layer')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_attention1.png')  # You can change the filename and format as needed
+plt.show()
+
+
+
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Model
+import matplotlib.pyplot as plt
+import umap
+
+# Specify the layer name
+layer_name = 'concatenate_1'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+
+
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Features Rep. of MHA Layer')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_attention2.png')  # You can change the filename and format as needed
+plt.show()
+
+
+
+
+# Specify the layer name
+layer_name = 'dropout_1'  # Replace with your actual layer name
+
+# Create a new model that outputs the activations of the specified layer
+layer_output = model.get_layer(layer_name).output
+activation_model = Model(inputs=model.input, outputs=layer_output)
+
+# Get feature maps for all test data
+feature_maps = activation_model.predict(X_test)
+# Flatten feature maps to 2D array (samples, features)
+num_samples = feature_maps.shape[0]
+num_features = np.prod(feature_maps.shape[1:])  # Flatten all dimensions except the batch dimension
+flattened_feature_maps = feature_maps.reshape(num_samples, num_features)
+
+# Run UMAP to reduce to 2D
+reducer = umap.UMAP(n_components=2, random_state=42)
+umap_embedding = reducer.fit_transform(flattened_feature_maps)
+
+
+# Assuming you have true positive and true negative labels
+tp_indices = np.where(y_test == 1)[0]
+tn_indices = np.where(y_test == 0)[0]
+
+plt.figure(figsize=(5, 4))
+plt.scatter(umap_embedding[tp_indices, 0], umap_embedding[tp_indices, 1], color='red', label='Positives', s=10)
+plt.scatter(umap_embedding[tn_indices, 0], umap_embedding[tn_indices, 1], color='blue', label='Negatives', s=10)
+plt.title(f'UMAP Features Rep. of Dense Layer 2')
+plt.xlabel('UMAP 1')
+plt.ylabel('UMAP 2')
+plt.legend()
+# Save the plot as an image file
+plt.savefig('umap_feature_dense2.png')  # You can change the filename and format as needed
+plt.show()
